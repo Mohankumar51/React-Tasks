@@ -1,0 +1,398 @@
+[
+    {
+        "id": "7da388e256ccafcf",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "edf795d094a28acd",
+        "type": "MySQLdatabase",
+        "name": "",
+        "host": "localhost",
+        "port": "3306",
+        "db": "react_nodered",
+        "tz": "",
+        "charset": "UTF8"
+    },
+    {
+        "id": "f5548fbd86f28aa5",
+        "type": "http in",
+        "z": "7da388e256ccafcf",
+        "name": "",
+        "url": "/addUser",
+        "method": "post",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 560,
+        "y": 320,
+        "wires": [
+            [
+                "b120c2dcdd61796b",
+                "ec93190c13630913"
+            ]
+        ]
+    },
+    {
+        "id": "b120c2dcdd61796b",
+        "type": "function",
+        "z": "7da388e256ccafcf",
+        "name": "validaiton",
+        "func": "\nif(!msg.payload.name){\n    let statusCode = 400;\n    msg.payload = {\n        status: statusCode,\n        message: \"name field is required\"\n    }\n    return [null, msg];\n}\n\nif(!msg.payload.email){\n    let statusCode = 400;\n    msg.payload = {\n        status: statusCode,\n        message: \"email field is required\"\n    }\n    return [null, msg];\n}\n\n\nreturn [msg, null];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 320,
+        "wires": [
+            [
+                "ae95050a8d9e91c5"
+            ],
+            [
+                "d76303a5732af096"
+            ]
+        ]
+    },
+    {
+        "id": "d76303a5732af096",
+        "type": "http response",
+        "z": "7da388e256ccafcf",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 890,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "ae95050a8d9e91c5",
+        "type": "function",
+        "z": "7da388e256ccafcf",
+        "name": "function 1",
+        "func": "    msg.topic = `INSERT INTO users (name, email) values('${msg.payload.name}', '${msg.payload.email}')`;\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 900,
+        "y": 300,
+        "wires": [
+            [
+                "5d4664d5056a5d83"
+            ]
+        ]
+    },
+    {
+        "id": "5d4664d5056a5d83",
+        "type": "mysql",
+        "z": "7da388e256ccafcf",
+        "mydb": "edf795d094a28acd",
+        "name": "MySQL",
+        "x": 1060,
+        "y": 300,
+        "wires": [
+            [
+                "b7d26ad2771b382d"
+            ]
+        ]
+    },
+    {
+        "id": "b925c61e2b89df5e",
+        "type": "debug",
+        "z": "7da388e256ccafcf",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1400,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "b7d26ad2771b382d",
+        "type": "function",
+        "z": "7da388e256ccafcf",
+        "name": "function 2",
+        "func": "node.warn(msg.payload);\nmsg.payload = {\n    status: 200,\n    message: \"user Added Successfully\"\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1220,
+        "y": 300,
+        "wires": [
+            [
+                "b925c61e2b89df5e",
+                "4b45b6904b207609"
+            ]
+        ]
+    },
+    {
+        "id": "4b45b6904b207609",
+        "type": "http response",
+        "z": "7da388e256ccafcf",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1350,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "6bcf2d4f01a97f2b",
+        "type": "inject",
+        "z": "7da388e256ccafcf",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"name\":\"Test1\",\"email\":\"test@gmail.com\"}",
+        "payloadType": "json",
+        "x": 520,
+        "y": 240,
+        "wires": [
+            [
+                "b120c2dcdd61796b"
+            ]
+        ]
+    },
+    {
+        "id": "0d588d135495dd8d",
+        "type": "inject",
+        "z": "7da388e256ccafcf",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 520,
+        "y": 560,
+        "wires": [
+            [
+                "d289d4257bfa5386"
+            ]
+        ]
+    },
+    {
+        "id": "d289d4257bfa5386",
+        "type": "function",
+        "z": "7da388e256ccafcf",
+        "name": "function 3",
+        "func": "    msg.topic = `DELETE FROM users`;\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 560,
+        "wires": [
+            [
+                "6df562c9a568b920"
+            ]
+        ]
+    },
+    {
+        "id": "6df562c9a568b920",
+        "type": "mysql",
+        "z": "7da388e256ccafcf",
+        "mydb": "edf795d094a28acd",
+        "name": "MySQL",
+        "x": 860,
+        "y": 560,
+        "wires": [
+            [
+                "523e784d929550aa"
+            ]
+        ]
+    },
+    {
+        "id": "523e784d929550aa",
+        "type": "function",
+        "z": "7da388e256ccafcf",
+        "name": "function 4",
+        "func": "node.warn(msg.payload);\nmsg.payload = {\n    status: 200,\n    message: \"user Added Successfully\"\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1020,
+        "y": 560,
+        "wires": [
+            [
+                "4c83e56f9e922f8b"
+            ]
+        ]
+    },
+    {
+        "id": "4c83e56f9e922f8b",
+        "type": "debug",
+        "z": "7da388e256ccafcf",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1200,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "ec93190c13630913",
+        "type": "debug",
+        "z": "7da388e256ccafcf",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "3db932ca4c26b724",
+        "type": "inject",
+        "z": "7da388e256ccafcf",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 500,
+        "y": 460,
+        "wires": [
+            [
+                "0746b02342de4465"
+            ]
+        ]
+    },
+    {
+        "id": "0746b02342de4465",
+        "type": "function",
+        "z": "7da388e256ccafcf",
+        "name": "function 5",
+        "func": "    msg.topic = `SELECT * FROM users`;\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 460,
+        "wires": [
+            [
+                "c303f21c684264c2"
+            ]
+        ]
+    },
+    {
+        "id": "c303f21c684264c2",
+        "type": "mysql",
+        "z": "7da388e256ccafcf",
+        "mydb": "edf795d094a28acd",
+        "name": "MySQL",
+        "x": 840,
+        "y": 460,
+        "wires": [
+            [
+                "d14541b9587f146d"
+            ]
+        ]
+    },
+    {
+        "id": "d14541b9587f146d",
+        "type": "function",
+        "z": "7da388e256ccafcf",
+        "name": "function 6",
+        "func": "node.warn(msg.payload);\nmsg.payload = {\n    status: 200,\n    message: \"user Added Successfully\"\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1000,
+        "y": 460,
+        "wires": [
+            [
+                "e4dc4135e9c91e73"
+            ]
+        ]
+    },
+    {
+        "id": "e4dc4135e9c91e73",
+        "type": "debug",
+        "z": "7da388e256ccafcf",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1180,
+        "y": 460,
+        "wires": []
+    }
+]
